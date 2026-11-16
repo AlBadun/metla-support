@@ -1,7 +1,7 @@
 // Список обращений: вкладки, поиск, «Показать ещё». Текст с сервера — только как текст: узлы и textContent.
-import {apiFetch, categoryLabel, element, lastRequest, messageText, refusalKey, refusalText, statusKey} from './core.js';
-import {openTicket} from './conversation.js';
-import {currentLang, t} from './i18n.js';
+import {apiFetch, categoryLabel, element, lastRequest, messageText, refusalKey, refusalText, statusKey} from './core.js?v=99f2eb87';
+import {openTicket} from './conversation.js?v=99f2eb87';
+import {currentLang, t} from './i18n.js?v=99f2eb87';
 
 const PAGE_SIZE = 10;
 const MAX_LIMIT = 50; // как на сервере (MAX_TICKETS_LIMIT)
@@ -37,6 +37,28 @@ export function updateTabCounts(data) {
     document.getElementById('count-in_progress').textContent = data.in_progress || 0;
     document.getElementById('count-resolved').textContent = data.resolved || 0;
     document.getElementById('count-closed').textContent = data.closed || 0;
+}
+
+function shiftCount(status, delta) {
+    const box = document.getElementById(`count-${status}`);
+    box.textContent = Math.max(0, (parseInt(box.textContent, 10) || 0) + delta);
+}
+
+// Обращение закрыто со страницы: карточка и счётчики меняются сразу, не дожидаясь обновления с сервера (живая проверка 16.11.2026,
+// #80: пока шло обновление, список ещё показывал «Открыто»). Во вкладке, где закрытому не место, карточка уходит. Обновление с
+// сервера потом рисует то, что в базе.
+export function markClosed(ticketId) {
+    const index = shownTickets.findIndex(ticket => ticket.id === ticketId);
+    if (index < 0) return;
+    const ticket = shownTickets[index];
+    if (ticket.status !== 'closed') {
+        shiftCount(statusKey(ticket.status), -1);
+        shiftCount('closed', 1);
+    }
+    const searching = document.getElementById('statusTabs').classList.contains('hidden');
+    if (!searching && !['all', 'closed'].includes(currentStatusFilter)) shownTickets.splice(index, 1);
+    else ticket.status = 'closed';
+    redrawCurrentList();
 }
 
 function markTab(status) {

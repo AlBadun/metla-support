@@ -1,9 +1,9 @@
 // Справка: один источник с ботом, GET /api/help (services/help_content.py бота). Подпись ей не нужна: открывается и в окне старше суток, и вне Telegram.
 // Отдельный экран вместо окна: темы → вопросы → ответ, «Назад» проходит тот же путь. Поиск — по уже полученному ответу сервера, запросов не делает.
-import {apiFetch} from './core.js';
-import {currentLang, t} from './i18n.js';
-import {startNewTicket} from './form.js';
-import {drawOnShow, openScreen, pushScreen} from './screens.js';
+import {apiFetch} from './core.js?v=99f2eb87';
+import {currentLang, t} from './i18n.js?v=99f2eb87';
+import {startNewTicket} from './form.js?v=99f2eb87';
+import {drawOnShow, openScreen, pushScreen} from './screens.js?v=99f2eb87';
 
 // Текст только как текст: узлы и textContent, разметки из данных здесь нет.
 const helpLoaded = {};

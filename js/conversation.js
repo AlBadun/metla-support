@@ -1,7 +1,7 @@
 // Экран обращения: переписка и закрытие. Текст с сервера — только как текст: узлы и textContent.
-import {apiFetch, element, lastRequest, messageLabel, messageText, refusalKey, refusalText, state, statusKey, telegramCall, telegramHas, vibrate} from './core.js';
-import {currentLang, t} from './i18n.js';
-import {drawOnShow, goBack, openScreen, screenIsOpen, setScreenTitle} from './screens.js';
+import {apiFetch, element, lastRequest, messageLabel, messageText, refusalKey, refusalText, state, statusKey, telegramCall, telegramHas, vibrate} from './core.js?v=99f2eb87';
+import {currentLang, t} from './i18n.js?v=99f2eb87';
+import {drawOnShow, goBack, openScreen, screenIsOpen, setScreenTitle} from './screens.js?v=99f2eb87';
 
 // Бот считает закрытыми оба состояния (CLOSED_STATUSES): кнопки у них нет (Е4).
 const FINISHED = ['resolved', 'closed'];
@@ -104,6 +104,11 @@ export async function refreshConversation() {
     }
 }
 
+// Крючки ставит app.js; страница из смеси двух выкладок в кэше могла бы остаться без них — тогда просто без обновления.
+function reloadList() {
+    if (state.reload) state.reload();
+}
+
 async function closeTicket(ticketId) {
     closing = true;
     document.getElementById('closeTicketBtn').disabled = true;
@@ -112,7 +117,13 @@ async function closeTicket(ticketId) {
         const response = await apiFetch(`/ticket/${ticketId}/close`, {method: 'PUT'});
         if (!response.success) throw new Error('Обращение не закрылось');
         vibrate('success');
-        state.reload();
+        reloadList();
+        // Список сразу, до ответа сервера. Сбой здесь — не «не удалось закрыть»: обращение уже закрыто, обновление уже идёт.
+        try {
+            if (state.ticketClosed) state.ticketClosed(ticketId);
+        } catch (e) {
+            console.error('Список не обновлён сразу:', e);
+        }
         // Человек мог уйти с экрана, пока шёл запрос: тогда он никуда не перескакивает.
         if (screenIsOpen('ticketScreen') && openedTicketId === ticketId) goBack();
     } catch (error) {
@@ -121,6 +132,8 @@ async function closeTicket(ticketId) {
         if (openedTicketId === ticketId) showCloseError(refusalKey(error) || 'error_closing');
         else vibrate('error');
         refreshConversation();
+        // Сервер мог закрыть, а ответ оборвался (или «уже закрыто»): список обновляется тихо и при сбое (второй взгляд 16.11).
+        reloadList();
     } finally {
         closing = false;
         document.getElementById('closeTicketBtn').disabled = false;

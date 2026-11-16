@@ -12,4 +12,8 @@
 | `syncopate-400.woff` | Syncopate 001.001 | слово CLEANER | латиница ASCII | © 2010 Brian J. Bonislawsky DBA Astigmatic (AOETI) | Apache 2.0 — `LICENSE-syncopate.txt` |
 
 Тексты лицензий — те же файлы, что у сайта metla-site (из репозитория google/fonts). Зарезервированных имён у этих шрифтов нет.
+
+Modified files notice: all six fonts here are modified versions of the original font files — subset to the characters this page
+uses and converted to WOFF by Al Badu team (tools/fonts.py, fontTools 4.65, 16.11.2026). Space Grotesk, Onest, Syne — SIL Open
+Font License 1.1; Syncopate — Apache License 2.0. No other changes.
 Пересобрать: `py -B tools/fonts.py <METLA_Cleaner> <коммит> <metla-support-bot>`; сверить с файлами здесь — то же с `--check`.

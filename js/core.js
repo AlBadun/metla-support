@@ -1,5 +1,5 @@
 // Общее для всех экранов: окно Telegram, запросы к серверу, текст с сервера — только как текст.
-import {t, translations} from './i18n.js';
+import {t, translations} from './i18n.js?v=99f2eb87';
 
 // Chrome 61–85: модули есть, replaceChildren нет (необновляемый WebView на старых телефонах). Без него список и переписка не рисуются.
 if (!Element.prototype.replaceChildren) {
@@ -9,8 +9,8 @@ if (!Element.prototype.replaceChildren) {
     };
 }
 
-// Что знают несколько экранов. reload — повторная загрузка главного экрана (app.js).
-export const state = {loadFailure: null, reload: null};
+// Что знают несколько экранов. reload — повторная загрузка главного экрана, ticketClosed — список сразу после закрытия (app.js).
+export const state = {loadFailure: null, reload: null, ticketClosed: null};
 
 // Номер последнего запроса: поздний ответ прежнего не рисуем, на экране уже другое (зависший запрос отменяется только через 30 с).
 export const lastRequest = { list: 0, conversation: 0 };

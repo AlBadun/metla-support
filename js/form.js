@@ -1,7 +1,7 @@
 // Новое обращение: категория, текст, файл, отправка. Черновик живёт в полях экрана: «Назад» и смена языка его не трогают; в память устройства не пишем: это данные человека.
-import {apiFetch, refusalKey, state, telegramApp, telegramCall, telegramInitData, vibrate} from './core.js';
-import {t} from './i18n.js';
-import {drawOnShow, leaveScreens, openScreen, replaceScreens, screenIsOpen} from './screens.js';
+import {apiFetch, refusalKey, state, telegramApp, telegramCall, telegramInitData, vibrate} from './core.js?v=99f2eb87';
+import {t} from './i18n.js?v=99f2eb87';
+import {drawOnShow, leaveScreens, openScreen, replaceScreens, screenIsOpen} from './screens.js?v=99f2eb87';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const MAX_TEXT_LENGTH = 4000; // как на сервере (api/routes/tickets.py бота, Д-181, этап 1)

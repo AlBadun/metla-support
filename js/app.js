@@ -1,12 +1,12 @@
 // Запуск страницы: загрузка главного экрана, смена языка, нажатия. Обработчик нажатий один на страницу: CSP запрещает onclick в разметке.
-import {askToCloseTicket, initConversation, refreshConversation} from './conversation.js';
-import {apiFetch, refusalText, setupTelegramWindow, state, telegramCall} from './core.js';
-import {formDone, initForm, pickCategory, pickFile, removeFile, startNewTicket, submitTicket, toggleCategoryList} from './form.js';
-import {clearHelpSearch, initHelp, openHelp} from './help.js';
-import {applyTranslations, setLanguage, t} from './i18n.js';
-import {initPulsar} from './motion.js';
-import {goBack, initScreens, redrawScreen} from './screens.js';
-import {clearSearch, initSearch, loadMoreTickets, loadTickets, redrawCurrentList, refreshTickets, setFilter, updateTabCounts} from './tickets.js';
+import {askToCloseTicket, initConversation, refreshConversation} from './conversation.js?v=99f2eb87';
+import {apiFetch, refusalText, setupTelegramWindow, state, telegramCall} from './core.js?v=99f2eb87';
+import {formDone, initForm, pickCategory, pickFile, removeFile, startNewTicket, submitTicket, toggleCategoryList} from './form.js?v=99f2eb87';
+import {clearHelpSearch, initHelp, openHelp} from './help.js?v=99f2eb87';
+import {applyTranslations, setLanguage, t} from './i18n.js?v=99f2eb87';
+import {initPulsar} from './motion.js?v=99f2eb87';
+import {goBack, initScreens, redrawScreen} from './screens.js?v=99f2eb87';
+import {clearSearch, initSearch, loadMoreTickets, loadTickets, markClosed, redrawCurrentList, refreshTickets, setFilter, updateTabCounts} from './tickets.js?v=99f2eb87';
 
 // Telegram и вкладка могут сказать о возврате окна оба: одно обновление.
 const RETURN_PAUSE_MS = 2000;
@@ -108,6 +108,7 @@ document.addEventListener('click', event => {
 
 function start() {
     state.reload = () => loadData(true);
+    state.ticketClosed = markClosed;
     window.metlaBoot.whenScript('telegramScript', () => {
         setupTelegramWindow();
         telegramCall('8.0', app => app.onEvent('activated', windowReturned));

@@ -1,7 +1,7 @@
 // Экраны одним стеком: каждый шаг вглубь помнит, как вернуться и где была прокрутка. «Назад» один: кнопка Telegram,
 // а если файла Telegram нет или клиент старше 6.1 — своя в общей шапке подэкрана (план этапа 3, Б1–Б3). На главном экране кнопки нет: там «Назад» закрывает окно, как и положено.
-import {telegramCall} from './core.js';
-import {t} from './i18n.js';
+import {telegramCall} from './core.js?v=99f2eb87';
+import {t} from './i18n.js?v=99f2eb87';
 
 const MAIN = 'mainScreen';
 const SCREENS = [MAIN, 'helpScreen', 'ticketScreen', 'formScreen', 'createdScreen'];

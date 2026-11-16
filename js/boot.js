@@ -1,10 +1,11 @@
 // Первый заход страницы: index.html и этот файл. Всё остальное подгружается отсюда и первый кадр не держит: при плохой связи или обрезке
 // (российские операторы режут Cloudflare на первых 16 КБ) человек видит текст, а не пустой экран. Старый синтаксис: файл обязан разобраться
-// на любом движке — проба tests/boot.spec.mjs. Адреса файлов — относительные: страница не привязана к хостингу.
+// на любом движке — проба tests/boot.spec.mjs. Адреса файлов — относительные: страница не привязана к хостингу. Метка ?v= у стилей
+// и модулей — версия кода (кэш GitHub Pages — 10 минут, выкладки не смешиваются); ставит её node tests/tools/version.mjs --write.
 (function () {
     var WAIT_BEFORE_FAILURE_MS = 12000;
-    var STYLES = ['css/variables.css', 'css/app.css'];
-    var MODULES = ['js/i18n.js', 'js/core.js', 'js/screens.js', 'js/form.js', 'js/help.js', 'js/conversation.js', 'js/tickets.js', 'js/motion.js', 'js/app.js'];
+    var STYLES = ['css/variables.css?v=99f2eb87', 'css/app.css?v=99f2eb87'];
+    var MODULES = ['js/i18n.js?v=99f2eb87', 'js/core.js?v=99f2eb87', 'js/screens.js?v=99f2eb87', 'js/form.js?v=99f2eb87', 'js/help.js?v=99f2eb87', 'js/conversation.js?v=99f2eb87', 'js/tickets.js?v=99f2eb87', 'js/motion.js?v=99f2eb87', 'js/app.js?v=99f2eb87'];
     var BOT_CHAT = 'https://t.me/METLA_support_bot';
     var WORDS = {
         ru: {
@@ -179,6 +180,6 @@
     MODULES.forEach(preloadModule);
     var main = document.createElement('script');
     main.type = 'module';
-    main.src = 'js/app.js';
+    main.src = 'js/app.js?v=99f2eb87';
     document.head.appendChild(main);
 })();
