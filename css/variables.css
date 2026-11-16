@@ -1,0 +1,50 @@
+/* Токены дизайн-системы METLA, имена как в артефакте и Color.kt. Значений вне этого списка в стилях нет. */
+
+/* Шрифты — свои файлы fonts/ (там же README и лицензии): с чужих серверов страница ничего не грузит (решение владельца 15.11.2026, «А»). */
+@font-face { font-family: "Space Grotesk"; src: url("../fonts/space-grotesk-400.woff") format("woff"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Space Grotesk"; src: url("../fonts/space-grotesk-700.woff") format("woff"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Onest"; src: url("../fonts/onest-400.woff") format("woff"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Onest"; src: url("../fonts/onest-700.woff") format("woff"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Syne"; src: url("../fonts/syne-800.woff") format("woff"); font-weight: 800; font-display: swap; }
+@font-face { font-family: "Syncopate"; src: url("../fonts/syncopate-400.woff") format("woff"); font-weight: 400; font-display: swap; }
+
+:root {
+    --void-space: #0B0D17;
+    --deep-surface: #151A27;
+    --surface-stroke: #1F2538;
+    --aqua-core: #00F0C8;
+    --electric-violet: #9966CC;
+    --saffron-accent: #FFD166;
+    --coral-accent: #FF6B6B;
+    --neon-flamingo: #FF6B9D;
+    --text-primary: #F0F3FA;
+    --text-secondary: #9BA4B5;
+    --text-hint: #5A6475;
+    --text-body: rgba(240, 243, 250, 0.85);
+    --screen-title: rgba(0, 240, 200, 0.8);
+    --card-fill-top: rgba(0, 240, 200, 0.08);
+    --card-fill-bottom: rgba(153, 102, 204, 0.04);
+    --card-border: rgba(0, 240, 200, 0.25);
+    --plate-fill: rgba(0, 240, 200, 0.15);
+    --plate-border: rgba(0, 240, 200, 0.35);
+    --icon-plate-border: rgba(0, 240, 200, 0.5);
+    --disabled-text: rgba(0, 240, 200, 0.5);
+    --disabled-border: rgba(0, 240, 200, 0.15);
+    --glass-fill: rgba(255, 255, 255, 0.03);
+    --field-border: rgba(0, 240, 200, 0.2);
+    --selected-fill: rgba(0, 240, 200, 0.1);
+    --error-fill: rgba(255, 107, 157, 0.1);
+    --error-border: rgba(255, 107, 157, 0.4);
+    --danger-fill: rgba(255, 107, 157, 0.15);
+    --accepted-border: rgba(0, 240, 200, 0.4);
+    --font-sans: 'Space Grotesk', 'Onest', system-ui, sans-serif;
+    --font-ru: 'Onest', system-ui, sans-serif;
+    --font-brand: 'Syne', 'Space Grotesk', sans-serif;
+    --font-wide: 'Syncopate', 'Space Grotesk', sans-serif;
+    --font-text: var(--font-sans);
+}
+
+/* По-русски весь текст — Onest, как в приложении (res/font-ru). */
+html[lang="ru"] {
+    --font-text: var(--font-ru);
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://telegram.org/js/telegram-web-app.js; style-src 'self'; font-src 'self'; connect-src https://metlasupportbot-production.up.railway.app; img-src 'self'; base-uri 'none'; form-action 'none'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METLA Cleaner - Support</title>
+    <!-- Первый заход: этот файл и boot.js, они подгружают всё остальное и первый кадр не держат (Д-181, этап 3). -->
+    <script src="js/boot.js"></script>
+    <!-- Файл Telegram не держит страницу: если не ответит, она всё равно работает (Д-181). -->
+    <script id="telegramScript" async src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Этот текст виден, только если не пришёл сам boot.js: при обычном заходе он заменяет его сразу. -->
+    <div id="bootNote" role="status">Загрузка… / Loading…<br><a href="https://t.me/METLA_support_bot">@METLA_support_bot</a></div>
+    <div id="app" hidden>
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+        <div class="bg-blob blob-3"></div>
+
+        <div class="lang-switcher">
+            <button class="lang-btn" data-lang="ru" data-action="lang">RU</button>
+            <button class="lang-btn" data-lang="en" data-action="lang">EN</button>
+        </div>
+
+        <div class="container">
+          <div id="mainScreen">
+            <div class="header">
+                <div class="pulsar-container">
+                    <canvas id="pulsarCanvas" class="pulsar-canvas"></canvas>
+                    <img class="pulsar-mark" src="img/metla-sphere.webp" width="78" height="78" alt="">
+                </div>
+                <div class="brand-metla">METLA</div>
+                <div class="brand-cleaner">CLEANER</div>
+                <h1 class="screen-title" data-i18n="app_subtitle">Поддержка</h1>
+            </div>
+
+            <div id="mainActions" class="main-actions">
+                <button class="action-btn secondary" data-action="help-open" data-i18n="btn_help">Помощь</button>
+                <button class="action-btn" data-action="ticket-new" data-i18n="btn_new_ticket">Новое обращение</button>
+            </div>
+
+            <div id="loader" class="loader" data-i18n="loading">Загрузка…</div>
+
+            <div id="content" class="hidden">
+                <div class="section-title" data-i18n="my_tickets">Мои обращения</div>
+
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" data-i18n-placeholder="search_placeholder" placeholder="Номер или слово из переписки">
+                    <button id="clearSearchBtn" class="search-clear-btn icon-btn hidden" data-action="search-clear" aria-label="Очистить поиск" data-i18n-label="search_clear"><img src="img/ic-close.svg" width="16" height="16" alt=""></button>
+                </div>
+
+                <div class="status-tabs" id="statusTabs">
+                    <button class="status-tab active" data-status="all" data-action="filter">
+                        <span data-i18n="filter_all">Все</span> (<span id="count-all">0</span>)
+                    </button>
+                    <button class="status-tab" data-status="open" data-action="filter">
+                        <span data-i18n="filter_open">Открытые</span> (<span id="count-open">0</span>)
+                    </button>
+                    <button class="status-tab" data-status="in_progress" data-action="filter">
+                        <span data-i18n="filter_in_progress">В работе</span> (<span id="count-in_progress">0</span>)
+                    </button>
+                    <button class="status-tab" data-status="resolved" data-action="filter">
+                        <span data-i18n="filter_resolved">Решённые</span> (<span id="count-resolved">0</span>)
+                    </button>
+                    <button class="status-tab" data-status="closed" data-action="filter">
+                        <span data-i18n="filter_closed">Закрытые</span> (<span id="count-closed">0</span>)
+                    </button>
+                </div>
+
+                <div id="tickets-list"></div>
+
+                <div id="moreError" class="error-card hidden" role="alert"></div>
+                <button id="loadMoreBtn" class="action-btn secondary hidden" data-action="load-more" data-i18n="btn_load_more">Показать ещё</button>
+            </div>
+          </div>
+
+          <!-- Общая шапка подэкрана: заголовок и своя кнопка «Назад» (только если нет кнопки Telegram). -->
+          <div id="screenHead" class="screen-head hidden">
+            <button id="ownBack" class="icon-btn back-btn hidden" data-action="back" aria-label="Назад" data-i18n-label="back"><img src="img/ic-back.svg" width="20" height="20" alt=""></button>
+            <h1 id="screenTitle" class="screen-title"></h1>
+          </div>
+
+          <div id="helpScreen" class="hidden">
+            <div id="helpSearchBox" class="search-container hidden">
+                <input type="text" id="helpSearch" class="search-input" data-i18n-placeholder="help_search" placeholder="Поиск по ответам">
+                <button id="helpSearchClear" class="search-clear-btn icon-btn hidden" data-action="help-search-clear" aria-label="Очистить поиск" data-i18n-label="search_clear"><img src="img/ic-close.svg" width="16" height="16" alt=""></button>
+            </div>
+            <div id="helpBody"></div>
+            <div id="helpNote" class="error-card hidden" role="alert" data-i18n="refuse_auth"></div>
+          </div>
+
+          <div id="ticketScreen" class="hidden">
+            <div id="ticketStatus"></div>
+            <div id="ticketConversation" class="ticket-conversation"></div>
+            <div id="ticketError" class="error-card hidden" role="alert"></div>
+            <button id="closeTicketBtn" class="action-btn danger hidden" data-action="ticket-close" data-i18n="btn_close_ticket">Закрыть обращение</button>
+          </div>
+
+          <div id="formScreen" class="hidden">
+            <fieldset id="newTicketForm">
+                <div class="form-group">
+                    <label class="form-label" id="categoryLabel" for="categoryTrigger" data-i18n="label_category">Категория</label>
+                    <div class="custom-select">
+                        <button type="button" class="custom-select-trigger" id="categoryTrigger" data-action="category-toggle" data-value="question" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="categoryLabel categoryValue">
+                            <span id="categoryValue" data-i18n="cat_question">Вопрос</span>
+                            <img src="img/ic-chevron-down.svg" width="20" height="20" alt="">
+                        </button>
+                        <div class="custom-select-options hidden" id="categoryOptions" role="listbox" aria-labelledby="categoryLabel">
+                            <button type="button" class="custom-select-option selected" role="option" aria-selected="true" data-action="category-pick" data-value="question"><span data-i18n="cat_question">Вопрос</span><img src="img/ic-bolt.svg" width="16" height="16" alt=""></button>
+                            <button type="button" class="custom-select-option" role="option" aria-selected="false" data-action="category-pick" data-value="bug"><span data-i18n="cat_bug">Ошибка</span><img src="img/ic-bolt.svg" width="16" height="16" alt=""></button>
+                            <button type="button" class="custom-select-option" role="option" aria-selected="false" data-action="category-pick" data-value="feature"><span data-i18n="cat_feature">Предложение</span><img src="img/ic-bolt.svg" width="16" height="16" alt=""></button>
+                            <button type="button" class="custom-select-option" role="option" aria-selected="false" data-action="category-pick" data-value="other"><span data-i18n="cat_other">Другое</span><img src="img/ic-bolt.svg" width="16" height="16" alt=""></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ticketMessage" data-i18n="label_description">Описание проблемы</label>
+                    <textarea class="form-textarea" id="ticketMessage" data-i18n-placeholder="placeholder_description" placeholder="Опишите вашу проблему подробно…"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="fileInput" data-i18n="label_attachment">Прикрепить файл (до 20 МБ)</label>
+                    <input type="file" id="fileInput" accept="image/jpeg, image/png, application/pdf, video/mp4, video/quicktime">
+                    <button type="button" class="action-btn secondary" data-action="file-pick" data-i18n="btn_attach_file">Выбрать файл</button>
+                    <div id="filePreview" class="hidden">
+                        <span id="fileName"></span>
+                        <button type="button" class="icon-btn" data-action="file-remove" aria-label="Убрать файл" data-i18n-label="file_remove"><img src="img/ic-close.svg" width="16" height="16" alt=""></button>
+                    </div>
+                </div>
+
+                <div id="formError" class="error-card hidden" role="alert"></div>
+
+                <button class="action-btn" data-action="submit" id="submitBtn" data-i18n="btn_create_ticket">Создать обращение</button>
+            </fieldset>
+
+          </div>
+
+          <div id="createdScreen" class="hidden">
+            <div id="createdNumber" class="accepted-card"></div>
+            <p id="createdText" role="status"></p>
+            <button class="action-btn" data-action="form-done" data-i18n="my_tickets">Мои обращения</button>
+          </div>
+        </div>
+    </div>
+</body>
+</html>
